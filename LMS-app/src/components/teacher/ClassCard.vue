@@ -125,21 +125,23 @@ const completionRateStyle = computed(() => {
 
 .class-card {
   width: 100%;
-  background-color: #e6f0fc; /* Changed from var(--card-bg-left) to match VRExperienceCard */
-  border-radius: 8px; /* Slightly more rounded corners */
+  height: 400px; /* Set static height */
+  background-color: #e6f0fc;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   display: flex;
   border: 1px solid var(--border-color);
-  font-family: sans-serif; /* Basic font */
+  font-family: sans-serif;
 }
 
-/* Left Section */
 .class-info {
-  flex: 3; /* Takes more space */
+  flex: 3;
   padding: 15px;
   display: flex;
   flex-direction: column;
+  height: 100%; /* Ensure it takes full height */
+  box-sizing: border-box; /* Include padding in height calculation */
 }
 
 .class-header {

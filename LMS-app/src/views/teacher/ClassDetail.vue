@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import SectionHeader from '../../components/common/SectionHeader.vue';
 import VRExperienceCard from '../../components/teacher/VRExperienceCard.vue';
 import ClassCard from '../../components/teacher/ClassCard.vue';
@@ -114,9 +114,22 @@ export default defineComponent({
       }));
     });
     
-    // Selected filters
-    const selectedClass = ref(studentsStore.classFilter);
-    const selectedExperience = ref(studentsStore.experienceFilter);
+    // Selected filters - Initialize with first option or empty string
+    const selectedClass = ref(studentsStore.classFilter || '');
+    const selectedExperience = ref(studentsStore.experienceFilter || '');
+    
+    // Initialize filters when options are available
+    watch(experienceOptions, (newOptions) => {
+      if (newOptions.length > 0 && !selectedExperience.value) {
+        selectedExperience.value = newOptions[0].value;
+      }
+    }, { immediate: true });
+
+    watch(classOptions, (newOptions) => {
+      if (newOptions.length > 0 && !selectedClass.value) {
+        selectedClass.value = newOptions[0].value;
+      }
+    }, { immediate: true });
     
     // Sorting
     const sortField = computed(() => studentsStore.sortField);

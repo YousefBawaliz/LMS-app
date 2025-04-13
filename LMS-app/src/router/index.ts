@@ -21,6 +21,22 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/teacher/ClassDetail.vue')
       }
     ]
+  },
+  {
+    path: '/admin',
+    component: () => import('../layouts/AdminLayout.vue'),
+    meta: { requiresAuth: true, userType: 'admin' },
+    children: [
+      {
+        path: '',
+        redirect: '/admin/teachers'  // Redirect to teachers management by default
+      },
+      {
+        path: 'teachers',
+        name: 'TeachersManagement',
+        component: () => import('../views/admin/TeachersManagement.vue')
+      }
+    ]
   }
 ];
 
@@ -33,18 +49,13 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   
-  // Check if route requires authentication
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!authStore.authenticated) {
-      // Redirect to login (would add this in a real app)
-      // next('/login');
-      // For this demo, we'll just assume authentication
       next();
     } else {
-      // Check if user type matches route requirements
       const userType = to.meta.userType;
-      if (userType && authStore.user?.type !== userType) {
-        // Redirect to appropriate home page based on user type
+      if (userType && authStore.user?.type !== userType && authStore.user?.type !== 'admin') {
+        // Only redirect if user is not an admin
         next(`/${authStore.user?.type}`);
       } else {
         next();
